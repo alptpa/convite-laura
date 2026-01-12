@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convite Stranger Things</title>
+    <title>Convite Stranger Things - Laura</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Recursive:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --stranger-red: #e71d23;
@@ -19,6 +19,7 @@
             overflow-x: hidden;
         }
 
+        /* Efeito de Título Stranger Things */
         .st-title {
             font-family: 'serif';
             text-transform: uppercase;
@@ -26,10 +27,12 @@
             -webkit-text-stroke: 1.5px var(--stranger-red);
             font-weight: 900;
             letter-spacing: -2px;
-            text-shadow: 0 0 10px rgba(231, 29, 35, 0.7), 0 0 20px rgba(231, 29, 35, 0.5);
+            text-shadow: 0 0 10px rgba(231, 29, 35, 0.7), 
+                         0 0 20px rgba(231, 29, 35, 0.5);
             line-height: 0.9;
         }
 
+        /* Luzes de Natal */
         .light-bulb {
             width: 20px;
             height: 20px;
@@ -44,6 +47,7 @@
             box-shadow: 0 0 15px currentColor, 0 0 25px currentColor;
         }
 
+        /* Efeito de Partículas (Mundo Invertido) */
         .particle {
             position: absolute;
             background: rgba(255, 255, 255, 0.2);
@@ -69,42 +73,48 @@
     <div id="particles-container"></div>
 
     <div class="max-w-md w-full card-glass rounded-xl p-8 text-center shadow-2xl relative z-10">
+        <!-- Título -->
         <div class="mb-8">
             <h1 class="st-title text-5xl md:text-6xl italic">STRANGER</h1>
             <h1 class="st-title text-6xl md:text-7xl">BIRTHDAY</h1>
             <p class="mt-4 text-gray-400 tracking-widest uppercase text-sm">Amigos não mentem... e não perdem festas!</p>
         </div>
 
+        <!-- Painel de Luzes Interativo -->
         <div class="bg-black/50 p-4 rounded-lg border border-gray-800 mb-8">
             <div id="light-strand" class="flex flex-wrap justify-center mb-2"></div>
             <div class="text-xs text-gray-500 mb-4 font-mono uppercase">Will está tentando dizer algo...</div>
             <div id="message-display" class="font-serif text-3xl font-bold tracking-[0.5em] h-10 text-yellow-100 uppercase"></div>
         </div>
 
-        <!-- 👇 EDITAR DADOS AQUI 👇 -->
+        <!-- Detalhes do Evento -->
         <div class="space-y-6 text-left border-l-2 border-red-600 pl-4">
             <div>
                 <h2 class="text-xs uppercase tracking-widest text-red-500 font-bold">Aniversariante</h2>
-                <p class="text-2xl font-bold uppercase">Laura Pereira</p> <!-- Troque aqui -->
+                <p class="text-2xl font-bold uppercase">Laura Pereira</p>
             </div>
             
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <h2 class="text-xs uppercase tracking-widest text-red-500 font-bold">Data</h2>
-                    <p class="text-lg">07 de Fevereiro</p> <!-- Troque aqui -->
+                    <p class="text-lg">07 de Fevereiro</p>
                 </div>
                 <div>
                     <h2 class="text-xs uppercase tracking-widest text-red-500 font-bold">Horário</h2>
-                    <p class="text-lg">14:00 Horas</p> <!-- Troque aqui -->
+                    <p class="text-lg">19:00 Horas</p>
                 </div>
             </div>
 
             <div>
                 <h2 class="text-xs uppercase tracking-widest text-red-500 font-bold">Local (O Porão)</h2>
-                <p class="text-lg">Rua Ervin Jirschik, 66 Chacaras São Bento - Sumaré/SP</p> <!-- Troque aqui -->
+                <p class="text-sm md:text-base leading-relaxed">
+                    Rua Ervin Jirschik, 66<br>
+                    Chacaras São Bento - Sumaré/SP
+                </p>
             </div>
         </div>
 
+        <!-- Botão de Confirmação -->
         <button onclick="confirmarPresence()" class="mt-10 w-full py-4 bg-red-700 hover:bg-red-600 transition-colors text-white font-bold uppercase tracking-widest rounded shadow-lg shadow-red-900/40">
             Confirmar no Walkie-Talkie
         </button>
@@ -117,8 +127,8 @@
         const strand = document.getElementById('light-strand');
         const messageDisplay = document.getElementById('message-display');
         
-        // 👇 TROQUE A PALAVRA QUE AS LUZES PISCAM AQUI 👇
-        const alphabet = "PARTY"; 
+        // Letras que piscam no painel
+        const alphabet = "LAURA"; 
         
         for (let i = 0; i < 15; i++) {
             const light = document.createElement('div');
@@ -180,8 +190,9 @@
         }
 
         function confirmarPresence() {
-            const msg = encodeURIComponent("Câmbio! Confirmo minha presença na festa no Mundo Invertido!");
-            window.open(`https://wa.me/?text=${msg}`);
+            const phone = "5519996384940";
+            const msg = encodeURIComponent("Câmbio! Confirmando minha presença no aniversário da Laura no Mundo Invertido! 📻🍕");
+            window.open(`https://wa.me/${phone}?text=${msg}`);
         }
     </script>
 </body>
