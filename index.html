@@ -111,7 +111,7 @@
     <div id="particles-container"></div>
 
     <!-- Controle de Áudio -->
-    <button id="musicToggle" class="audio-control" onclick="toggleMusic()">
+    <button id="musicToggle" class="audio-control" onclick="toggleMusic(event)">
         <svg id="speaker-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path id="speaker-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
             <path id="speaker-circle" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -120,8 +120,9 @@
     </button>
     
     <audio id="bgMusic" loop preload="auto">
-        <!-- Recomendo descarregar um MP3 e colocá-lo no seu GitHub com o nome 'musica.mp3' -->
+        <!-- Fonte local recomendada -->
         <source src="musica.mp3" type="audio/mpeg">
+        <!-- Fonte remota estável via GitHub -->
         <source src="https://raw.githubusercontent.com/Mayank-MP05/Stranger-Things-Music/main/Stranger-Things.mp3" type="audio/mpeg">
     </audio>
 
@@ -171,7 +172,7 @@
             Confirmar no Walkie-Talkie
         </button>
         
-        <p class="mt-6 text-[10px] text-gray-600 uppercase italic">Clique no botão vermelho para trilha sonora.</p>
+        <p class="mt-6 text-[10px] text-gray-600 uppercase italic">Toque na tela para iniciar a trilha sonora.</p>
     </div>
 
     <script>
@@ -231,27 +232,49 @@
         setInterval(pulseLights, 200);
         setInterval(spellMessage, 1200);
 
-        // Lógica de Música com tratamento de erros
-        function toggleMusic() {
-            if (bgMusic.paused) {
-                const playPromise = bgMusic.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        audioStatus.textContent = "Pause";
-                        speakerPath.setAttribute('d', 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z');
-                    }).catch(error => {
-                        console.error("Erro ao carregar o áudio local ou remoto:", error);
-                        // Mensagem amigável caso o ficheiro não exista no repositório
-                        alert("Câmbio! Não foi possível captar o sinal sonoro. Certifique-se de que o ficheiro 'musica.mp3' está no seu repositório GitHub.");
-                    });
-                }
+        // Função para atualizar visual do botão
+        function updateAudioUI(playing) {
+            if (playing) {
+                audioStatus.textContent = "Pause";
+                speakerPath.setAttribute('d', 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z');
             } else {
-                bgMusic.pause();
                 audioStatus.textContent = "Play";
                 speakerPath.setAttribute('d', 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z');
             }
         }
+
+        // Lógica de Música Centralizada
+        function toggleMusic(event) {
+            if (event) event.stopPropagation(); // Evita disparar o listener de clique do body
+            
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(err => console.log("Erro ao tocar:", err));
+            } else {
+                bgMusic.pause();
+                updateAudioUI(false);
+            }
+        }
+
+        // Inicia música automaticamente na primeira interação com a página
+        function initAudioOnInteraction() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    updateAudioUI(true);
+                    // Remove os listeners após o sucesso para não interferir mais
+                    document.body.removeEventListener('click', initAudioOnInteraction);
+                    document.body.removeEventListener('touchstart', initAudioOnInteraction);
+                }).catch(err => {
+                    // Se falhar (ex: áudio ainda carregando), tenta novamente na próxima interação
+                    console.log("Aguardando interação válida...");
+                });
+            }
+        }
+
+        // Adiciona listeners para capturar o primeiro toque/clique do convidado
+        document.body.addEventListener('click', initAudioOnInteraction);
+        document.body.addEventListener('touchstart', initAudioOnInteraction);
 
         const particlesContainer = document.getElementById('particles-container');
         for (let i = 0; i < 30; i++) {
