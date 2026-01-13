@@ -110,10 +110,9 @@
 <body class="min-h-screen flex items-center justify-center p-4">
     <div id="particles-container"></div>
 
-    <!-- Controle de Áudio Simplificado -->
+    <!-- Controle de Áudio -->
     <button id="musicToggle" class="audio-control" onclick="toggleMusic()">
         <svg id="speaker-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <!-- Ícone de Play (Estado Inicial) -->
             <path id="speaker-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
             <path id="speaker-circle" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
@@ -121,8 +120,9 @@
     </button>
     
     <audio id="bgMusic" loop preload="auto">
-        <!-- Link atualizado para um servidor mais estável (Archive.org) -->
-        <source src="https://www.televisiontunes.com/uploads/audio/Stranger%20Things.mp3" type="audio/mpeg">
+        <!-- Recomendo descarregar um MP3 e colocá-lo no seu GitHub com o nome 'musica.mp3' -->
+        <source src="musica.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/Mayank-MP05/Stranger-Things-Music/main/Stranger-Things.mp3" type="audio/mpeg">
     </audio>
 
     <div class="max-w-md w-full card-glass rounded-xl p-8 text-center shadow-2xl relative z-10">
@@ -231,7 +231,7 @@
         setInterval(pulseLights, 200);
         setInterval(spellMessage, 1200);
 
-        // Lógica de Música Simplificada com tratamento de erro
+        // Lógica de Música com tratamento de erros
         function toggleMusic() {
             if (bgMusic.paused) {
                 const playPromise = bgMusic.play();
@@ -241,8 +241,9 @@
                         audioStatus.textContent = "Pause";
                         speakerPath.setAttribute('d', 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z');
                     }).catch(error => {
-                        console.error("Erro ao tocar música:", error);
-                        alert("Não foi possível carregar a música. Tente novamente em instantes ou verifique sua conexão.");
+                        console.error("Erro ao carregar o áudio local ou remoto:", error);
+                        // Mensagem amigável caso o ficheiro não exista no repositório
+                        alert("Câmbio! Não foi possível captar o sinal sonoro. Certifique-se de que o ficheiro 'musica.mp3' está no seu repositório GitHub.");
                     });
                 }
             } else {
@@ -252,12 +253,6 @@
             }
         }
 
-        // Alerta caso o arquivo de som não exista ou falhe
-        bgMusic.addEventListener('error', function() {
-            console.error("Falha ao carregar o arquivo de áudio.");
-        });
-
-        // Partículas do Mundo Invertido
         const particlesContainer = document.getElementById('particles-container');
         for (let i = 0; i < 30; i++) {
             const p = document.createElement('div');
