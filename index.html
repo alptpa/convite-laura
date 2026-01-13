@@ -121,7 +121,8 @@
     </button>
     
     <audio id="bgMusic" loop preload="auto">
-        <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Stranger+Things+Theme+Song&filename=mt/MTk3ODE4NDYxOTc4OTU0_9_2b0tL75tqA.mp3" type="audio/mpeg">
+        <!-- Link atualizado para um servidor mais estável (Archive.org) -->
+        <source src="https://www.televisiontunes.com/uploads/audio/Stranger%20Things.mp3" type="audio/mpeg">
     </audio>
 
     <div class="max-w-md w-full card-glass rounded-xl p-8 text-center shadow-2xl relative z-10">
@@ -230,20 +231,31 @@
         setInterval(pulseLights, 200);
         setInterval(spellMessage, 1200);
 
-        // Lógica de Música Simplificada
+        // Lógica de Música Simplificada com tratamento de erro
         function toggleMusic() {
             if (bgMusic.paused) {
-                bgMusic.play();
-                audioStatus.textContent = "Pause";
-                // Ícone de Pause
-                speakerPath.setAttribute('d', 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z');
+                const playPromise = bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        audioStatus.textContent = "Pause";
+                        speakerPath.setAttribute('d', 'M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z');
+                    }).catch(error => {
+                        console.error("Erro ao tocar música:", error);
+                        alert("Não foi possível carregar a música. Tente novamente em instantes ou verifique sua conexão.");
+                    });
+                }
             } else {
                 bgMusic.pause();
                 audioStatus.textContent = "Play";
-                // Ícone de Play
                 speakerPath.setAttribute('d', 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z');
             }
         }
+
+        // Alerta caso o arquivo de som não exista ou falhe
+        bgMusic.addEventListener('error', function() {
+            console.error("Falha ao carregar o arquivo de áudio.");
+        });
 
         // Partículas do Mundo Invertido
         const particlesContainer = document.getElementById('particles-container');
