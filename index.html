@@ -85,6 +85,13 @@
             justify-content: center;
             box-shadow: 0 0 15px var(--stranger-red);
         }
+
+        /* Estilo do link de endereço */
+        .address-link:hover {
+            color: var(--stranger-red);
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -93,10 +100,10 @@
     <!-- Controle de Áudio -->
     <button id="musicToggle" class="audio-control" onclick="toggleMusic()">
         <svg id="speaker-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path id="speaker-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
         </svg>
     </button>
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
         <source src="https://www.soundboard.com/handler/DownLoadTrack.ashx?cliptitle=Stranger+Things+Theme+Song&filename=mt/MTk3ODE4NDYxOTc4OTU0_9_2b0tL75tqA.mp3" type="audio/mpeg">
     </audio>
 
@@ -132,10 +139,13 @@
 
             <div>
                 <h2 class="text-xs uppercase tracking-widest text-red-500 font-bold">Local (O Porão)</h2>
-                <p class="text-sm md:text-base leading-relaxed">
-                    Rua Ervin Jirschik, 66<br>
-                    Chacaras São Bento - Sumaré/SP
-                </p>
+                <a href="https://www.google.com/maps/search/?api=1&query=Rua+Ervin+Jirschik%2C+66+Chacaras+S%C3%A3o+Bento+-+Sumar%C3%A9%2FSP" target="_blank" class="address-link block mt-1">
+                    <p class="text-sm md:text-base leading-relaxed">
+                        Rua Ervin Jirschik, 66<br>
+                        Chacaras São Bento - Sumaré/SP
+                    </p>
+                    <span class="text-[10px] text-red-400/60 uppercase tracking-tighter">Clique para abrir no mapa 📍</span>
+                </a>
             </div>
         </div>
 
@@ -151,8 +161,9 @@
         const strand = document.getElementById('light-strand');
         const messageDisplay = document.getElementById('message-display');
         const bgMusic = document.getElementById('bgMusic');
-        const speakerIcon = document.getElementById('speaker-icon');
+        const speakerPath = document.getElementById('speaker-path');
         
+        // Alterado de "LAURA" para "PARTY" conforme solicitado
         const alphabet = "PARTY"; 
         
         for (let i = 0; i < 15; i++) {
@@ -167,6 +178,7 @@
         function pulseLights() {
             const lights = document.querySelectorAll('.light-bulb');
             const randomLight = lights[Math.floor(Math.random() * lights.length)];
+            if (!randomLight) return;
             randomLight.style.backgroundColor = randomLight.style.color;
             randomLight.classList.add('light-on');
             setTimeout(() => {
@@ -201,20 +213,30 @@
         setInterval(pulseLights, 200);
         setInterval(spellMessage, 1200);
 
-        // Música Logic
-        function toggleMusic() {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                speakerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />';
-            } else {
-                bgMusic.pause();
-                speakerIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />';
+        let isPlaying = false;
+
+        async function playMusic() {
+            try {
+                await bgMusic.play();
+                isPlaying = true;
+                speakerPath.setAttribute('d', 'M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z');
+            } catch (err) {
+                console.log("Autoplay bloqueado.");
             }
         }
 
-        // Tentar tocar no primeiro clique na página
-        document.body.addEventListener('click', () => {
-            if (bgMusic.paused) bgMusic.play();
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                playMusic();
+            } else {
+                bgMusic.pause();
+                isPlaying = false;
+                speakerPath.setAttribute('d', 'M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2');
+            }
+        }
+
+        window.addEventListener('click', () => {
+            if (!isPlaying) playMusic();
         }, { once: true });
 
         const particlesContainer = document.getElementById('particles-container');
